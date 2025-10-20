@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thiệp Mời Sinh Nhật Hoàng 🎉</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: url('https://images.unsplash.com/photo-1604014237800-1c9102c3a6c2?auto=format&fit=crop&w=1950&q=80') center/cover no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Poppins', sans-serif;
+      overflow: hidden;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 20px;
+      padding: 40px 60px;
+      text-align: center;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      animation: fadeIn 2s ease;
+    }
+    h1 {
+      font-size: 2.5rem;
+      color: #ff0066;
+      margin-bottom: 10px;
+    }
+    h2 {
+      font-size: 1.5rem;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 1.1rem;
+      color: #555;
+      margin: 10px 0;
+    }
+    button {
+      background: linear-gradient(45deg, #ff0066, #ff6600);
+      border: none;
+      color: white;
+      padding: 12px 25px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: transform 0.3s;
+    }
+    button:hover {
+      transform: scale(1.1);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🎂 Mời bạn đến dự sinh nhật Hoàng 🎉</h1>
+    <h2>📅 Ngày 28/10 tại Haidilao</h2>
+    <p>Đến chung vui và thưởng thức những món ngon cùng Hoàng nhé!</p>
+    <button onclick="playMusic()">Nhấn để mở nhạc DJ 🎧</button>
+  </div>
+
+  <audio id="djMusic" src="https://cdn.pixabay.com/download/audio/2023/07/19/audio_f3c0cf0adf.mp3?filename=energetic-party-dj-music-162826.mp3"></audio>
+
+  <script>
+    function playMusic() {
+      const music = document.getElementById('djMusic');
+      music.play();
+      alert('Chúc mừng sinh nhật Hoàng! 🎉 Hãy cùng quẩy thôi!');
+    }
+  </script>
+</body>
+</html>
