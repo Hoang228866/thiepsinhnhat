@@ -22,6 +22,7 @@
       text-align: center;
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
       animation: fadeIn 2s ease;
+      z-index: 10;
     }
     h1 {
       font-size: 2.5rem;
@@ -55,24 +56,119 @@
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    /* Canvas pháo hoa */
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+    }
   </style>
 </head>
 <body>
+  <canvas id="fireworks"></canvas>
+
   <div class="card">
     <h1>🎂 Mời bạn đến dự sinh nhật Hoàng 🎉</h1>
     <h2>📅 Ngày 28/10 tại Haidilao</h2>
     <p>Đến chung vui và thưởng thức những món ngon cùng Hoàng nhé!</p>
-    <button onclick="playMusic()">Nhấn để mở nhạc DJ 🎧</button>
+
+    <button id="playBtn">Nhấn để mở nhạc DJ 🎧</button>
+    <audio id="djMusic" src="djthaihoang.mp3"></audio>
   </div>
 
-  <audio id="djMusic" src="https://cdn.pixabay.com/download/audio/2023/07/19/audio_f3c0cf0adf.mp3?filename=energetic-party-dj-music-162826.mp3"></audio>
-
   <script>
-    function playMusic() {
-      const music = document.getElementById('djMusic');
-      music.play();
-      alert('Chúc mừng sinh nhật Hoàng! 🎉 Hãy cùng quẩy thôi!');
+    const btn = document.getElementById("playBtn");
+    const audio = document.getElementById("djMusic");
+    const canvas = document.getElementById("fireworks");
+    const ctx = canvas.getContext("2d");
+
+    let fireworks = [];
+    let playing = false;
+
+    // Resize canvas
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     }
+    window.addEventListener("resize", resize);
+    resize();
+
+    // Hiệu ứng pháo hoa
+    class Firework {
+      constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.particles = [];
+        for (let i = 0; i < 30; i++) {
+          this.particles.push({
+            x: x,
+            y: y,
+            angle: Math.random() * 2 * Math.PI,
+            speed: Math.random() * 5 + 2,
+            alpha: 1
+          });
+        }
+      }
+      update() {
+        this.particles.forEach(p => {
+          p.x += Math.cos(p.angle) * p.speed;
+          p.y += Math.sin(p.angle) * p.speed;
+          p.alpha -= 0.02;
+        });
+        this.particles = this.particles.filter(p => p.alpha > 0);
+      }
+      draw() {
+        this.particles.forEach(p => {
+          ctx.globalAlpha = p.alpha;
+          ctx.fillStyle = this.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        ctx.globalAlpha = 1;
+      }
+    }
+
+    function loop() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      fireworks.forEach(fw => {
+        fw.update();
+        fw.draw();
+      });
+      fireworks = fireworks.filter(fw => fw.particles.length > 0);
+      requestAnimationFrame(loop);
+    }
+    loop();
+
+    // Bắt đầu phát nhạc và pháo hoa
+    btn.addEventListener("click", () => {
+      if (audio.paused) {
+        audio.play();
+        btn.innerText = "🎶 Đang phát nhạc DJ 🎶";
+        alert('Chúc mừng sinh nhật Hoàng! 🎉 Hãy cùng quẩy thôi!');
+        playing = true;
+        setInterval(() => {
+          if (playing) {
+            fireworks.push(
+              new Firework(
+                Math.random() * canvas.width,
+                Math.random() * canvas.height / 1.5,
+                `hsl(${Math.random() * 360}, 100%, 60%)`
+              )
+            );
+          }
+        }, 300);
+      } else {
+        audio.pause();
+        btn.innerText = "Nhấn để mở nhạc DJ 🎧";
+        playing = false;
+      }
+    });
   </script>
 </body>
 </html>
